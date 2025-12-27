@@ -502,3 +502,57 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+// Load output files when page loads
+async function loadOutputFiles() {
+    try {
+        const response = await fetch('/api/output-files');
+        const data = await response.json();
+        
+        const outputSection = document.getElementById('outputSection');
+        
+        if (!data.files || data.files.length === 0) {
+            outputSection.innerHTML = '<p class=\"empty-message\">Tidak ada file PDF di folder output</p>';
+            return;
+        }
+        
+        let html = '<div class=\"output-files-list\">';
+        data.files.forEach(file => {
+            html += \
+                <div class=\"output-file-item\">
+                    <div class=\"file-info\">
+                        <div class=\"file-name\" title=\"\\"> \</div>
+                        <div class=\"file-details\">
+                            <span class=\"file-size\">\ MB</span>
+                            <span class=\"file-time\">\</span>
+                        </div>
+                    </div>
+                    <button class=\"btn btn-primary btn-sm\" onclick=\"downloadFile('\')\" style=\"margin-top: 8px; width: 100%;\">
+                         Download
+                    </button>
+                </div>
+            \;
+        });
+        html += '</div>';
+        outputSection.innerHTML = html;
+    } catch (error) {
+        console.error('Error loading output files:', error);
+        document.getElementById('outputSection').innerHTML = '<p class=\"error-message\">Error loading files</p>';
+    }
+}
+
+// Download file
+function downloadFile(filename) {
+    const url = \/api/download/\\;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+// Load output files every 5 seconds
+setInterval(loadOutputFiles, 5000);
+
+// Initial load
+loadOutputFiles();

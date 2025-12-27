@@ -512,3 +512,81 @@ body {
         flex-wrap: wrap;
     }
 }
+
+/* Output Files Section */
+.output-section {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.output-files-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.output-file-item {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 12px;
+    transition: all 0.3s ease;
+}
+
+.output-file-item:hover {
+    background: #e9ecef;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.file-info {
+    margin-bottom: 10px;
+}
+
+.file-name {
+    font-weight: 600;
+    color: #2c3e50;
+    word-break: break-word;
+    margin-bottom: 6px;
+}
+
+.file-details {
+    display: flex;
+    gap: 15px;
+    font-size: 12px;
+    color: #7f8c8d;
+}
+
+.file-size {
+    background: #e8f4f8;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.file-time {
+    background: #f0e8f8;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.empty-message {
+    text-align: center;
+    color: #95a5a6;
+    padding: 20px;
+    font-style: italic;
+}
+
+.error-message {
+    text-align: center;
+    color: #e74c3c;
+    padding: 20px;
+}
+
+/* Responsive untuk mobile */
+@media (max-width: 600px) {
+    .output-file-item {
+        padding: 10px;
+    }
+    
+    .file-details {
+        flex-wrap: wrap;
+    }

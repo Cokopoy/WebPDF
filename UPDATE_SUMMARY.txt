@@ -1,0 +1,34 @@
+﻿#  Perubahan yang sudah dilakukan:
+
+## 1. Backend (app.py)
+-  Endpoint /api/output-files - List semua PDF di folder output
+-  Endpoint /api/download/<filename> - Download PDF file
+
+## 2. Frontend (static/script.js)
+-  Function loadOutputFiles() - Load files dari server
+-  Function downloadFile() - Download file ke device
+-  Auto-refresh setiap 5 detik
+
+## 3. Template (templates/index.html)
+-  Tambah section 'File Output' di UI
+-  Tampilkan nama file, ukuran, tanggal
+
+## 4. Styling (static/style.css)
+-  CSS untuk output files list
+-  Responsive design untuk mobile
+
+## Cara Push ke GitHub:
+
+Buka Git Bash di folder WebPDF, lalu jalankan:
+
+git add .
+git commit -m \"Add output files download feature for mobile and web\"
+git push origin main
+
+Atau jika PowerShell sudah support git (setelah restart):
+
+git add .
+git commit -m \"Add output files download feature\"
+git push origin main
+
+Setelah push, Replit akan auto-update dalam 1-2 menit!

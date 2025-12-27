@@ -636,6 +636,64 @@ def set_output_folder():
         print(f"[!] Error setting output folder: {e}")
         return jsonify({'error': str(e)}), 400
 
+@app.route('/api/output-files', methods=['GET'])
+def get_output_files():
+    """Get list of PDF files in output folder"""
+    try:
+        config = load_config()
+        output_folder = config.get('output_folder', session.get('output_folder', str(Path.home() / 'Downloads')))
+        
+        if not os.path.isdir(output_folder):
+            return jsonify({'files': []})
+        
+        files = []
+        for filename in os.listdir(output_folder):
+            if filename.lower().endswith('.pdf'):
+                filepath = os.path.join(output_folder, filename)
+                file_size = os.path.getsize(filepath)
+                file_time = os.path.getmtime(filepath)
+                
+                files.append({
+                    'name': filename,
+                    'size': file_size,
+                    'size_mb': round(file_size / (1024*1024), 2),
+                    'time': file_time,
+                    'time_str': datetime.datetime.fromtimestamp(file_time).strftime('%Y-%m-%d %H:%M:%S')
+                })
+        
+        # Sort by time (newest first)
+        files.sort(key=lambda x: x['time'], reverse=True)
+        
+        return jsonify({'files': files, 'folder': output_folder})
+    except Exception as e:
+        print(f"[!] Error getting output files: {e}")
+        return jsonify({'error': str(e), 'files': []}), 500
+
+@app.route('/api/download/<filename>', methods=['GET'])
+def download_file(filename):
+    """Download PDF file from output folder"""
+    try:
+        # Sanitize filename to prevent path traversal
+        safe_filename = secure_filename(filename)
+        
+        config = load_config()
+        output_folder = config.get('output_folder', session.get('output_folder', str(Path.home() / 'Downloads')))
+        
+        filepath = os.path.join(output_folder, safe_filename)
+        
+        # Verify file exists and is in output folder
+        if not os.path.exists(filepath) or not os.path.isfile(filepath):
+            return jsonify({'error': 'File not found'}), 404
+        
+        # Verify file is PDF
+        if not safe_filename.lower().endswith('.pdf'):
+            return jsonify({'error': 'Invalid file type'}), 400
+        
+        return send_file(filepath, as_attachment=True, download_name=safe_filename)
+    except Exception as e:
+        print(f"[!] Error downloading file: {e}")
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(debug=False, host='0.0.0.0', port=port)
