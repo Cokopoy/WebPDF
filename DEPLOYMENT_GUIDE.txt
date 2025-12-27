@@ -1,0 +1,54 @@
+﻿#  Setup Lengkap untuk Deployment ke Render
+
+## Files yang sudah dibuat:
+-  Procfile (untuk Render)
+-  runtime.txt (Python 3.11.5)
+-  requirements.txt (sudah ada)
+-  app.py (sudah update untuk production)
+
+## Step 1: Install Git
+1. Download dari https://git-scm.com/download/win
+2. Install dengan opsi default
+
+## Step 2: Upload ke GitHub
+Buka PowerShell di folder WebPDF, jalankan:
+
+`powershell
+# Inisialisasi git
+git init
+
+# Set nama dan email (ganti dengan email Anda)
+git config user.name "JumpingTurtoise"
+git config user.email "your-email@example.com"
+
+# Add semua file
+git add .
+
+# Commit
+git commit -m "Initial commit: Setup untuk Render deployment"
+
+# Set main branch
+git branch -M main
+
+# Add remote (ganti YourUsername jika berbeda)
+git remote add origin https://github.com/JumpingTurtoise/WebPDF.git
+
+# Push
+git push -u origin main
+`
+
+## Step 3: Deploy ke Render
+1. Login ke https://render.com
+2. New + Web Service
+3. Connect GitHub  pilih repo WebPDF
+4. Settings:
+   - Name: webpdf-app (atau nama lain)
+   - Runtime: Python 3
+   - Build Command: pip install -r requirements.txt
+   - Start Command: gunicorn app:app
+   - Environment: Pastikan PORT setting sudah ada
+
+5. Deploy!
+
+URL Anda akan: https://webpdf-app.onrender.com (atau nama custom)
+

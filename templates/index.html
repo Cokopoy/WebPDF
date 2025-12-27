@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zzzuper PDF - Web Application</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🚀 MergerPDF</h1>
+            <p>Aplikasi Gabung PDF & Gambar ke PDF - Tanpa Simpan Database</p>
+        </header>
+
+        <!-- Folder Selection Modal -->
+        <div id="folderModal" class="modal">
+            <div class="modal-content">
+                <h2>⚙️ Pilih Folder Input dan Output</h2>
+                <div class="folder-settings">
+                    <div class="folder-item">
+                        <label>📁 Folder Input:</label>
+                        <div class="folder-display" id="inputFolderDisplay">Memuat...</div>
+                        <button class="btn btn-primary" onclick="toggleInputFolderInput()">
+                            Ubah Folder Input
+                        </button>
+                        <input type="text" id="inputFolderInput" placeholder="Masukkan path folder" style="display: none;" onkeypress="if(event.key==='Enter') toggleInputFolderInput()">
+                    </div>
+                    
+                    <div class="folder-item">
+                        <label>📁 Folder Output:</label>
+                        <div class="folder-display" id="outputFolderDisplay">Memuat...</div>
+                        <button class="btn btn-primary" onclick="toggleOutputFolderInput()">
+                            Ubah Folder Output
+                        </button>
+                        <input type="text" id="outputFolderInput" placeholder="Masukkan path folder" style="display: none;" onkeypress="if(event.key==='Enter') toggleOutputFolderInput()">
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button class="btn btn-success" onclick="closeFolderModal()">✓ Selesai</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Settings Bar -->
+            <div class="settings-bar">
+                <button class="btn btn-sm btn-secondary" onclick="openFolderModal()">⚙️ Pengaturan Folder</button>
+            </div>
+
+            <!-- Left Panel: File List and Controls -->
+            <div class="left-panel">
+                <div class="section">
+                    <h3>Daftar File</h3>
+                    <div class="file-list" id="fileList">
+                        <p class="empty-message">Belum ada file yang ditambahkan</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Kontrol File</h3>
+                    <div class="button-group">
+                        <label for="pdfInput" class="btn btn-primary">
+                            📄 Tambah PDF
+                        </label>
+                        <input type="file" id="pdfInput" accept=".pdf" multiple hidden>
+                        
+                        <label for="imageInput" class="btn btn-primary">
+                            🖼️ Tambah Gambar
+                        </label>
+                        <input type="file" id="imageInput" accept=".jpg,.jpeg,.png" multiple hidden>
+                        
+                        <button class="btn btn-danger" onclick="clearAllFiles()">
+                            🗑️ Kosongkan Daftar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Urutan File</h3>
+                    <div class="button-group">
+                        <button class="btn btn-secondary" onclick="moveFile('up')">
+                            ⬆️ Pindah Ke Atas
+                        </button>
+                        <button class="btn btn-secondary" onclick="moveFile('down')">
+                            ⬇️ Pindah Ke Bawah
+                        </button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Proses</h3>
+                    <div class="button-group">
+                        <button class="btn btn-success btn-large" onclick="mergePDF()">
+                            ✅ Gabung Gambar & PDF ke PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Preview -->
+            <div class="right-panel">
+                <div class="preview-section">
+                    <h3>Preview File</h3>
+                    <div class="preview-info" id="previewInfo">
+                        Pilih file untuk melihat preview
+                    </div>
+                    <div class="preview-container" id="previewContainer">
+                        <img id="previewImage" src="" alt="Preview" class="preview-image" style="display:none;">
+                        <div id="previewEmpty" class="preview-empty">Pilih file untuk melihat preview</div>
+                    </div>
+                    <div class="preview-controls">
+                        <button class="btn btn-sm" onclick="rotatePreview(-90)">⟲ Kiri</button>
+                        <button class="btn btn-sm" onclick="rotatePreview(90)">Kanan ⟳</button>
+                        <button class="btn btn-sm" onclick="rotatePreview(180)">⬅️ Balik</button>
+                        <button class="btn btn-sm" onclick="rotatePreview(0)">↩️ Normal</button>
+                    </div>
+                    <div class="preview-navigation" id="pageNav" style="display: none;">
+                        <button onclick="previousPage()">« Sebelumnya</button>
+                        <span id="pageInfo"></span>
+                        <button onclick="nextPage()">Selanjutnya »</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal untuk merge progress -->
+    <div id="progressModal" class="modal">
+        <div class="modal-content">
+            <h2>Menggabung File...</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText">Harap tunggu...</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
